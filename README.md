@@ -25,3 +25,9 @@
     retry.start(function(cb){
         cb(); 
     });
+
+单元测试
+==========
+
+    npm install -g mocha
+    mocha test
