@@ -1,7 +1,7 @@
 (function(global){
     var Retry = function(options){
         options = options || {};
-        this._timeout = options.timeout || 30000;
+        this._timeout = options.timeout;
         this._max = options.max || Infinity;
         this._interval = options.interval || 0;
         this._cbs = {
@@ -15,10 +15,12 @@
             var tried = 0;
             var _this = this;
             var timer,stop = false;
-            timer = setTimeout(function(){
-                _this._fire('timeout');
-                stop = true;
-            },_this._timeout);
+            if(this._timeout){
+                timer = setTimeout(function(){
+                    _this._fire('timeout');
+                    stop = true;
+                },this._timeout);
+            }
             (function tryfn(){
                 if(!stop){
                     tried++;
