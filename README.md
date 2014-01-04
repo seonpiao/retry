@@ -36,4 +36,4 @@
 
 ##In Browser
 
-    用浏览器打开tests.test.html
+    用浏览器打开tests/test.html
