@@ -29,5 +29,11 @@
 单元测试
 ==========
 
+##In Node.js
+
     npm install -g mocha
-    mocha test
+    make test
+
+##In Browser
+
+    用浏览器打开tests.test.html
