@@ -54,13 +54,16 @@
         un:function(type,cb){
             var cbs = this._cbs[type];
             if(cb){
-                var i = cbs.indexOf(cb);
-                if(i !== -1){
-                    cbs.splice(i,1);
+                //为兼容ie6，不用indexOf方法
+                for(var i = 0; i < cbs.length; i++){
+                    if(cbs[i] === cb){
+                        cbs.splice(i,1);
+                        break;
+                    }
                 }
             }
             else{
-                cbs.splice(0);
+                cbs.splice(0,cbs.length);
             }
         },
         _fire:function(type){
@@ -75,4 +78,5 @@
     if(typeof module !== 'undefined'){
         module.exports = Retry;
     }
+    global.Retry = Retry;
 })(this);
