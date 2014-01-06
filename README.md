@@ -21,10 +21,12 @@
      *                      函数若执行成功，则调用cb(true)，Retry会停止重试，并触发done事件
      *                      若执行失败，则调用cb()，Retry将会继续进行重试。若超过最大重试次数，则会触发fail事件
      *                      若执行时间超过了设置的超时时间，Retry会停止重试，并触发timeout事件
+     *                      cb函数从第二个参数开始，都会作为done事件回调函数的参数传入
      */
     retry.start(function(cb){
         cb(); 
     });
+    retry.stop();
 
 单元测试
 ==========
