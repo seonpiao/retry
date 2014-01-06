@@ -14,15 +14,16 @@
         start:function(fn){
             var tried = 0;
             var _this = this;
-            var timer,stop = false;
+            var timer;
+            this._stop = false;
             if(this._timeout){
                 timer = setTimeout(function(){
                     _this._fire('timeout');
-                    stop = true;
+                    _this._stop = true;
                 },this._timeout);
             }
             (function tryfn(){
-                if(!stop){
+                if(!_this._stop){
                     tried++;
                     if(tried > _this._max){
                         _this._fire('fail');
@@ -31,7 +32,9 @@
                     else{
                         fn(function(done){
                             if(done === true){
-                                _this._fire('done');
+                                var args = Array.prototype.slice.call(arguments,1);
+                                args.unshift('done');
+                                _this._fire.apply(_this,args);
                                 clearTimeout(timer);
                             }
                             else{
@@ -46,6 +49,9 @@
                     }    
                 }
             })();
+        },
+        stop:function(){
+            this._stop = true;
         },
         on:function(type,cb){
             var cbs = this._cbs[type];
@@ -67,10 +73,11 @@
             }
         },
         _fire:function(type){
+            var args = Array.prototype.slice.call(arguments,1);
             var cbs = this._cbs[type];
-            if(cbs){
+            if(cbs && !this._stop){
                 for(var i = 0; i < cbs.length; i++){
-                    cbs[i]();
+                    cbs[i].apply(null,args);
                 }
             }
         }

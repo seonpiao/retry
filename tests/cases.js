@@ -122,5 +122,72 @@ describe('Retry', function() {
                 cb(true);
             });
         });
+        it('do not trigger done event when stopped.', function(done) {
+            var retry = new Retry();
+            var n = 0;
+            retry.on('done',function(){
+                n++;
+            });
+            retry.start(function(cb){
+                setTimeout(function(){
+                    cb(true);
+                },100);
+            });
+            retry.stop();
+            setTimeout(function(){
+                assert.equal(0,n);
+                done();
+            },200);
+        });
+        it('do not trigger fail event when stopped.', function(done) {
+            var retry = new Retry({
+                max:1
+            });
+            var n = 0;
+            retry.on('fail',function(){
+                n++;
+            });
+            retry.start(function(cb){
+                setTimeout(function(){
+                    cb();
+                },100);
+            });
+            retry.stop();
+            setTimeout(function(){
+                assert.equal(0,n);
+                done();
+            },200);
+        });
+        it('do not trigger timeout event when stopped.', function(done) {
+            var retry = new Retry({
+                timeout:50
+            });
+            var n = 0;
+            retry.on('timeout',function(){
+                n++;
+            });
+            retry.start(function(cb){
+                setTimeout(function(){
+                    cb(true);
+                },100);
+            });
+            retry.stop();
+            setTimeout(function(){
+                assert.equal(0,n);
+                done();
+            },100);
+        });
+        it('pass param to done event handler.', function(done) {
+            var retry = new Retry();
+            var n = 0;
+            retry.on('done',function(num){
+                n += num;
+                assert.equal(5,n);
+                done();
+            });
+            retry.start(function(cb){
+                cb(true,5);
+            });
+        });
     });
 });
