@@ -5,28 +5,28 @@
         timeout:1000, //超时时间，默认不会超时
         interval:200, //每次执行的时间间隔，默认是0
         max:10        //最大重试次数，默认是无穷大
-    });
-    retry.on('done',function(){
-        //成功
-    });
-    retry.on('fail',function(){
-        //失败
-    });
-    retry.on('timeout',function(){
-        //超时处理
+        done:function(){
+            //成功
+        },
+        fail:function(type){
+            //失败
+            if(type === 'timeout'){
+                //超时
+            }
+            if(type === 'exceedmax'){
+                //重试次数超限
+            }
+        }
     });
     /**
      * 开始执行
      * @param  {Function}   尝试执行的函数。
-     *                      函数若执行成功，则调用cb(true)，Retry会停止重试，并触发done事件
-     *                      若执行失败，则调用cb()，Retry将会继续进行重试。若超过最大重试次数，则会触发fail事件
-     *                      若执行时间超过了设置的超时时间，Retry会停止重试，并触发timeout事件
-     *                      cb函数从第二个参数开始，都会作为done事件回调函数的参数传入
      */
-    retry.start(function(cb){
-        cb(); 
+    retry.start(function(done,retry){
+        done();  //执行成功
+        retry();  //本次执行失败，开始下一次重试 
     });
-    retry.stop();
+    retry.stop();  //停止重试
 
 单元测试
 ==========
